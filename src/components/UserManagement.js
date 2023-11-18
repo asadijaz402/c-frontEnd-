@@ -24,21 +24,20 @@ const UserManagement = () => {
   }, []);
 
   const handleUserClick = (userId) => {
-    const selected = users.find((user) => user.id === userId);
+    const selected = users.find((user) => user._id === userId);
     setSelectedUser(selected);
   };
 
   const handleCreateOrUpdateUser = async (userData) => {
     try {
-      if (userData.id) {
-        // If the user has an ID, update the user
-        await axios.put(`http://localhost:3000/api/users//${userData.id}`, userData);
+      if (userData._id) {
+        await axios.put(
+          `http://localhost:3000/api/users//${userData._id}`,
+          userData
+        );
       } else {
-        // If the user doesn't have an ID, create a new user
         await axios.post('http://localhost:3000/api/users/', userData);
       }
-
-      // Refetch the updated user list
       const response = await axios.get('http://localhost:3000/api/users/');
       setUsers(response.data);
 
@@ -51,10 +50,7 @@ const UserManagement = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      // Delete the user
       await axios.delete(`http://localhost:3000/api/users//${userId}`);
-
-      // Refetch the updated user list
       const response = await axios.get('http://localhost:3000/api/users/');
       setUsers(response.data);
 
@@ -66,11 +62,11 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="w-1/3 p-4">
+    <div className='flex'>
+      <div className='w-1/3 p-4'>
         <UserList users={users} onUserClick={handleUserClick} />
       </div>
-      <div className="w-2/3 p-4">
+      <div className='w-2/3 p-4'>
         {selectedUser ? (
           <div>
             <UserDetail user={selectedUser} />
@@ -79,14 +75,14 @@ const UserManagement = () => {
               initialValues={selectedUser}
             />
             <button
-              className="bg-red-500 text-white py-2 px-4 mt-2"
-              onClick={() => handleDeleteUser(selectedUser.id)}
+              className='bg-red-500 text-white py-2 px-4 mt-2'
+              onClick={() => handleDeleteUser(selectedUser._id)}
             >
               Delete User
             </button>
           </div>
         ) : (
-          <p>Select a user to view details.</p>
+          <UserForm onSubmit={handleCreateOrUpdateUser} />
         )}
       </div>
     </div>
