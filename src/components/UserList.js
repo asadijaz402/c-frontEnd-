@@ -1,13 +1,15 @@
 // src/components/UserList.js
 import React from 'react';
 
-const UserList = ({ users }) => {
+const UserList = ({ users, onUserClick }) => {
   return (
     <div>
-      <h2>User List</h2>
+      <h2 className="text-3xl font-bold underline" >User List</h2>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
+          <li onClick={() => onUserClick(user._id)} key={user._id}>
+            {user.name}
+          </li>
         ))}
       </ul>
     </div>
